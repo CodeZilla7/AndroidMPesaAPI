@@ -6,7 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Settings {
+/**
+ * This class provides useful constants and variables hence should not be extended nor instantiated
+ */
+public final class Settings {
+
+    private Settings(){}
     //Connection timeout duration
     public static final int CONNECT_TIMEOUT = 60 * 1000;
 
