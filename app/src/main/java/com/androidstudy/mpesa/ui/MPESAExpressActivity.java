@@ -1,5 +1,6 @@
-package com.androidstudy.mpesa.mpesaexpress;
+package com.androidstudy.mpesa.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.androidstudy.daraja.DarajaListener;
 import com.androidstudy.daraja.model.AccessToken;
 import com.androidstudy.daraja.model.LNMExpress;
 import com.androidstudy.daraja.model.LNMResult;
+import com.androidstudy.daraja.util.TransactionType;
 import com.androidstudy.mpesa.R;
 
 import butterknife.BindView;
@@ -37,9 +39,11 @@ public class MPESAExpressActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mpesaexpress);
         ButterKnife.bind(this);
 
+        startActivity(new Intent(getBaseContext(), PaymentActivity.class));
+
         //Init Daraja
         //TODO :: REPLACE WITH YOUR OWN CREDENTIALS  :: THIS IS SANDBOX DEMO
-        daraja = Daraja.with("EG6TJgOCyuVGHKUeJs0uLXKsLCANRjbo", "4F3tAlRZ4OzNZt0Y", new DarajaListener<AccessToken>() {
+        daraja = Daraja.with("Uku3wUhDw9z0Otdk2hUAbGZck8ZGILyh", "JDjpQBm5HpYwk38b", new DarajaListener<AccessToken>() {
             @Override
             public void onResult(@NonNull AccessToken accessToken) {
                 Log.i(MPESAExpressActivity.this.getClass().getSimpleName(), accessToken.getAccess_token());
@@ -67,7 +71,8 @@ public class MPESAExpressActivity extends AppCompatActivity {
             LNMExpress lnmExpress = new LNMExpress(
                     "174379",
                     "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",  //https://developer.safaricom.co.ke/test_credentials
-                    "100",
+                    TransactionType.CustomerBuyGoodsOnline, // TransactionType.CustomerPayBillOnline  <- Apply any of these two
+                    "10",
                     "254708374149",
                     "174379",
                     phoneNumber,
