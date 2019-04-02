@@ -2,6 +2,8 @@ package com.androidstudy.daraja.network;
 
 import com.androidstudy.daraja.okhttp.AccessTokenInterceptor;
 import com.androidstudy.daraja.okhttp.AuthInterceptor;
+import com.androidstudy.daraja.okhttp.UnsafeOkHttpClient;
+import com.androidstudy.daraja.util.Env;
 import com.androidstudy.daraja.util.Settings;
 
 import java.util.concurrent.TimeUnit;
@@ -22,11 +24,10 @@ public class ApiClient {
 
     public static LNMAPI getAPI(String BASE_URL, String authToken) {
         if (LNMAPI == null) {
-            OkHttpClient client = new OkHttpClient.Builder()
+            OkHttpClient client = getClientBuilder(BASE_URL)
                     .connectTimeout(Settings.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                     .writeTimeout(Settings.WRITE_TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(Settings.READ_TIMEOUT, TimeUnit.SECONDS)
-                    .addInterceptor(httpLoggingInterceptor)
                     .addInterceptor(new AuthInterceptor(authToken))
                     .build();
 
@@ -40,13 +41,26 @@ public class ApiClient {
         return LNMAPI;
     }
 
+    private static OkHttpClient.Builder getClientBuilder(String base_url) {
+        OkHttpClient.Builder builder;
+        if (base_url.equals(Env.SANDBOX.toString())){
+            builder = new UnsafeOkHttpClient()
+                    .getUnsafeOkHttpClient()
+                    .addInterceptor(httpLoggingInterceptor);
+        }else{
+            builder = new OkHttpClient.Builder();
+        }
+
+       return builder;
+
+    }
+
     public static AuthAPI getAuthAPI(String CONSUMER_KEY, String CONSUMER_SECRET, String BASE_URL) {
         if (authAPI == null) {
-            OkHttpClient client = new OkHttpClient.Builder()
+            OkHttpClient client = getClientBuilder(BASE_URL)
                     .connectTimeout(Settings.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                     .writeTimeout(Settings.WRITE_TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(Settings.READ_TIMEOUT, TimeUnit.SECONDS)
-                    .addInterceptor(httpLoggingInterceptor)
                     .addInterceptor(new AccessTokenInterceptor(CONSUMER_KEY, CONSUMER_SECRET))
                     .build();
 

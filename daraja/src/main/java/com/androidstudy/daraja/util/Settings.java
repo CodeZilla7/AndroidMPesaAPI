@@ -21,6 +21,7 @@ public final class Settings {
     //Connection write timeout duration
     public static final int WRITE_TIMEOUT = 60 * 1000;
 
+    //TODO('Raise exception')
     //The MSISDN sending the funds
     public static String formatPhoneNumber(String phoneNumber) {
         if (phoneNumber.equals("")) {
